@@ -107,3 +107,7 @@ The above image was generated with [Codeface](https://codeface.io).
 From version/tag 0.1.0 on, SwiftLSP adheres to [semantic versioning](https://semver.org). So until it has reached 1.0.0, its API may still break frequently, but this will be expressed in version bumps.
 
 SwiftLSP is already being used in production, but [Codeface](https://codeface.io) is still its primary client. SwiftLSP will move to version 1.0.0 as soon as its basic practicality and conceptual soundness have been validated by serving multiple real-world clients.
+
+## To Do
+
+* turn PacketDetector into Combine Publisher or add some other means of observability (@Observable?) ?
