@@ -13,12 +13,12 @@ let package = Package(
     dependencies: [
 //        .package(path: "../FoundationToolz"),
         .package(
-            url: "https://github.com/flowtoolz/FoundationToolz.git",
-            exact: "0.4.1"
+            url: "https://github.com/nohype-ai/FoundationToolz.git",
+            exact: "0.5.9"
         ),
         .package(
-            url: "https://github.com/flowtoolz/SwiftyToolz.git",
-            exact: "0.5.1"
+            url: "https://github.com/nohype-ai/SwiftyToolz.git",
+            exact: "0.5.7"
         )
     ],
     targets: [
