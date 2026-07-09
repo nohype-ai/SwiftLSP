@@ -7,30 +7,16 @@ public extension LSP
     /// An ``LSPServerConnection`` that uses a `WebSocket` to talk to an LSP server
     ///
     /// The client should set the four handlers defined by the protocol ``LSPServerConnection``
-    class WebSocketConnection: LSPServerConnection
+    class WebSocketConnection: LSPServerConnection, WebSocketProcessor
     {
         // MARK: - Initialize
         
         /// Initialize with a WebSocket
-        /// - Parameter webSocket: A WebSocket connected to an LSP server
-        public init(webSocket: WebSocket)
+        /// - Parameter url: The endpoint URL on which to connect to the websocket
+        public init(url: URL) throws
         {
-            self.webSocket = webSocket
-            
-            webSocket.didReceiveData =
-            {
-                [weak self] data in self?.process(data: data)
-            }
-            
-            webSocket.didReceiveText =
-            {
-                [weak self] text in self?.serverDidSendErrorOutput(text)
-            }
-            
-            webSocket.didCloseWithError =
-            {
-                [weak self] _, error in self?.didCloseWithError(error)
-            }
+            self.url = url
+            try ensureWebSocketIsStored()
         }
         
         // MARK: - Talk to LSP Server
@@ -54,7 +40,7 @@ public extension LSP
             catch
             {
                 log(error.readable)
-                log("Received data:\n" + (data.utf8String ?? "<decoding error>"))
+                log("Received data:\n" + data.utf8String)
             }
         }
         
@@ -66,7 +52,7 @@ public extension LSP
         /// - Parameter message: The `LSP.Message` to send
         public func sendToServer(_ message: LSP.Message) async throws
         {
-            try await webSocket.send(try LSP.Packet(message).data)
+            try await getWebSocket().send(try LSP.Packet(message).data)
         }
         
         // MARK: - Manage Connection
@@ -78,6 +64,43 @@ public extension LSP
         
         // MARK: - WebSocket
         
-        private let webSocket: WebSocket
+        private func getWebSocket() throws -> WebSocket
+        {
+            try ensureWebSocketIsStored()
+        }
+        
+        @discardableResult
+        private func ensureWebSocketIsStored() throws -> WebSocket
+        {
+            if let storedWebSocket
+            {
+                return storedWebSocket
+            }
+            
+            let newWebSocket = try url.webSocket(processor: self)
+            storedWebSocket = newWebSocket
+            return newWebSocket
+        }
+        
+        private var storedWebSocket: WebSocket?
+        private let url: URL
+        
+        // MARK: - WebSocketProcessor Protocol
+        
+        public func didReceive(data: Data)
+        {
+            process(data: data)
+        }
+        
+        public func didReceive(text: String)
+        {
+            serverDidSendErrorOutput(text)
+        }
+        
+        public func didCloseWithError(webSocket: WebSocket, error: Error)
+        {
+            storedWebSocket = nil
+            didCloseWithError(error)
+        }
     }
 }
