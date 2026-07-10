@@ -11,7 +11,7 @@ public extension LSP
     {
         // MARK: - Initialize
         
-        /// Initialize with a WebSocket
+        /// Initialize with a URL
         /// - Parameter url: The endpoint URL on which to connect to the websocket
         public init(url: URL) throws
         {
