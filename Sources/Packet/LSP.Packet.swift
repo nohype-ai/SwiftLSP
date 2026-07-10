@@ -66,7 +66,7 @@ public extension LSP
                 
                 guard let header = Parser.header(fromBeginningOf: data) else
                 {
-                    throw "Data doesn't start with header:\n\(data.utf8String!)"
+                    throw "Data doesn't start with header:\n\(data.utf8String)"
                 }
                 
                 guard let contentLength = Parser.contentLength(fromHeader: header) else
@@ -96,7 +96,7 @@ public extension LSP
                 
                 guard let separatorIndex = indexOfSeparator(in: data) else
                 {
-                    log(verbose: "Data (\(data.count) Byte) contains no header/content separator:\n\(data.utf8String!) (yet)")
+                    log(verbose: "Data (\(data.count) Byte) contains no header/content separator:\n\(data.utf8String) (yet)")
                     return nil
                 }
                 
@@ -127,7 +127,7 @@ public extension LSP
             
             private static func contentLength(fromHeader header: Data) -> Int?
             {
-                let headerString = header.utf8String!
+                let headerString = header.utf8String
                 let headerLines = headerString.components(separatedBy: "\r\n")
                 
                 for headerLine in headerLines
