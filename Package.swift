@@ -14,11 +14,11 @@ let package = Package(
 //        .package(path: "../FoundationToolz"),
         .package(
             url: "https://github.com/nohype-ai/FoundationToolz.git",
-            exact: "0.5.9"
+            exact: "0.5.10"
         ),
         .package(
             url: "https://github.com/nohype-ai/SwiftyToolz.git",
-            exact: "0.5.7"
+            exact: "0.5.8"
         )
     ],
     targets: [
